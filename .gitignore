@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# IDEA
+.idea/
+
+# Deploy
+deploy.sh
