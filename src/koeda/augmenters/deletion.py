@@ -2,7 +2,7 @@ import random
 from typing import Union
 from itertools import repeat
 
-from src.koeda.utils import list_to_string, replace_space, revert_space, SPACE_TOKEN
+from src.koeda.utils import replace_space, revert_space, SPACE_TOKEN
 from konlpy.tag import *
 
 
@@ -35,7 +35,7 @@ class RandomDeletion:
 
         # obviously, if there's only one word, don't delete it
         if len(words) == 1:
-            return list_to_string(words)
+            return revert_space(words)
 
         # randomly delete words with probability p
         new_words = []
@@ -50,6 +50,6 @@ class RandomDeletion:
         # if you end up deleting all words, just return a random word
         if len(set(filter(SPACE_TOKEN.__ne__, new_words))) == 0:
             rand_int = random.randint(0, len(words) - 1)
-            return list_to_string([data[rand_int]])
+            return revert_space([data[rand_int]])
 
         return revert_space(new_words)

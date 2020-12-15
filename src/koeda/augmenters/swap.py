@@ -2,7 +2,7 @@ import random
 from typing import Union
 from itertools import repeat
 
-from src.koeda.utils import list_to_string, replace_space, revert_space, SPACE_TOKEN
+from src.koeda.utils import replace_space, revert_space
 from konlpy.tag import *
 
 
@@ -39,9 +39,6 @@ class RandomSwap:
         for _ in range(n):
             new_words = self._swap_word(new_words)
 
-        print(words)
-        print(split_words)
-        print(new_words)
         return revert_space(new_words)
 
     def _swap_word(self, new_words):
