@@ -1,43 +1,60 @@
 import random
 from typing import Union
+from itertools import repeat
 
-from src.koeda.utils import get_synonyms, list_to_string
-
-
-def random_insertion(data: Union[list, str], p: float = 0.1) -> Union[list, str]:
-    if isinstance(data, str):
-        return _insertion(data, p)
-    elif isinstance(data, list):
-        return list(map(_insertion, data))
-    else:
-        raise Exception(f"Does not support the data type : {type(data)}")
+from src.koeda.utils import replace_space, revert_space, get_synonyms, STOPWORD, SPACE_TOKEN
+from konlpy.tag import *
 
 
-def _insertion(data: str, p: float = 0.1) -> str:
-    words = data.split()
+class RandomInsertion:
 
-    n = max(1, int(len(words) * p))
+    def __init__(self, morpheme_analyzer=None, stopword=False):
+        self.stopword = stopword
 
-    new_words = words.copy()
-    for _ in range(n):
-        add_word(new_words)
-    return list_to_string(new_words)
+        if morpheme_analyzer is None:
+            self.morpheme_analyzer = Okt()
+        elif morpheme_analyzer in ["Okt", "Kkma", "Komoran", "Mecab", "Hannanum"]:
+            self.morpheme_analyzer = eval(morpheme_analyzer)()
+        elif hasattr(morpheme_analyzer, "morphs"):
+            self.morpheme_analyzer = morpheme_analyzer
+        else:
+            raise Exception("Does not support morpheme analyzer.")
 
+    def __call__(self, *args, **kwargs):
+        return self.random_insertion(*args, **kwargs)
 
-def add_word(new_words):
-    synonyms = []
-    counter = 0
-    while len(synonyms) < 1:
-        random_word = new_words[random.randint(0, len(new_words) - 1)]
-        synonyms = get_synonyms(random_word)
-        counter += 1
-        if counter >= 10:
-            return
-    random_synonym = synonyms[0]
-    random_idx = random.randint(0, len(new_words) - 1)
-    new_words.insert(random_idx, random_synonym)
+    def random_insertion(self, data: Union[list, str], p: float = 0.1) -> Union[list, str]:
+        if isinstance(data, str):
+            return self._insertion(data, p)
+        elif isinstance(data, list):
+            return list(map(self._insertion, data, repeat(p, len(data))))
+        else:
+            raise Exception(f"Does not support the data type : {type(data)}")
 
+    def _insertion(self, data: str, p: float = 0.1) -> str:
+        split_words = self.morpheme_analyzer.morphs(replace_space(data))
+        words = self.morpheme_analyzer.morphs(data)
 
+        n = max(1, int(len(words) * p))
 
+        new_words = split_words.copy()
+        for _ in range(n):
+            self.add_word(words, new_words)
+        return revert_space(new_words)
 
-
+    def add_word(self, words, new_words):
+        synonyms = []
+        counter = 0
+        while len(synonyms) < 1:
+            random_word = words[random.randint(0, len(words) - 1)]
+            if self.stopword and random_word in STOPWORD:
+                continue
+            synonyms = get_synonyms(random_word)
+            counter += 1
+            if counter >= 10:
+                return
+        random_synonym = random.choice(synonyms)
+        random_idx = random.randint(0, len(new_words) - 1)
+        new_words.insert(random_idx, SPACE_TOKEN)
+        new_words.insert(random_idx + 1, random_synonym)
+        new_words.insert(random_idx + 2, SPACE_TOKEN)
