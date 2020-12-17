@@ -1,5 +1,3 @@
-if __name__ == "__main__":
-    print("Hello KoEDA")
+__all__ = ['EasyDataAugmentation']
 
-def hello():
-    print("Hello KoEDA")
+from .eda import *
