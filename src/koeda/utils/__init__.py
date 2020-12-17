@@ -1,4 +1,4 @@
-__all__ = ['WORDNET', 'STOPWORD', 'get_synonyms', 'replace_space', 'revert_space', 'SPACE_TOKEN']
+__all__ = ['WORDNET', 'STOPWORD', 'get_synonyms']
 
 from .wordnet import *
 from .stopwords import *
