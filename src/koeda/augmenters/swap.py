@@ -1,6 +1,6 @@
 import random
-from typing import Union
-from itertools import repeat
+from typing import Union, List
+from itertools import repeat, chain
 
 from src.koeda.utils import replace_space, revert_space
 from konlpy.tag import *
@@ -8,7 +8,7 @@ from konlpy.tag import *
 
 class RandomSwap:
 
-    def __init__(self, morpheme_analyzer=None):
+    def __init__(self, morpheme_analyzer: str = None):
         if morpheme_analyzer is None:
             self.morpheme_analyzer = Okt()
         elif morpheme_analyzer in ["Okt", "Kkma", "Komoran", "Mecab", "Hannanum"]:
@@ -21,11 +21,17 @@ class RandomSwap:
     def __call__(self, *args, **kwargs):
         return self.random_swap(*args, **kwargs)
 
-    def random_swap(self, data: Union[list, str], p: float = 0.1) -> Union[list, str]:
+    def random_swap(self, data: Union[List[str], str], p: float = 0.1, repetition: int = 1) -> Union[List[str], str]:
         if isinstance(data, str):
-            return self._swap(data, p)
+            if repetition <= 1:
+                return self._swap(data, p)
+            else:
+                return list(map(self._swap, repeat(data, repetition), repeat(p, repetition)))
         elif isinstance(data, list):
-            return list(map(self._swap, data, repeat(p, len(data))))
+            if repetition <= 1:
+                return list(map(self._swap, data, repeat(p, len(data))))
+            else:
+                return list(map(self._swap, chain.from_iterable(repeat(x, repetition) for x in data), repeat(p, len(data) * repetition)))
         else:
             raise Exception(f"Does not support the data type : {type(data)}")
 
@@ -41,7 +47,7 @@ class RandomSwap:
 
         return revert_space(new_words)
 
-    def _swap_word(self, new_words):
+    def _swap_word(self, new_words: list) -> list:
         random_idx_1 = random.randint(0, len(new_words) - 1)
         random_idx_2 = random_idx_1
         counter = 0

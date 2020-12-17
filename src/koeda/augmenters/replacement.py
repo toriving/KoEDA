@@ -1,6 +1,6 @@
 import random
-from typing import Union
-from itertools import repeat
+from typing import Union, List
+from itertools import repeat, chain
 
 from src.koeda.utils import replace_space, revert_space, get_synonyms, STOPWORD
 from konlpy.tag import *
@@ -8,7 +8,7 @@ from konlpy.tag import *
 
 class SynonymReplacement:
 
-    def __init__(self, morpheme_analyzer=None, stopword=False):
+    def __init__(self, morpheme_analyzer: str = None, stopword: bool = False):
         self.stopword = stopword
 
         if morpheme_analyzer is None:
@@ -23,11 +23,17 @@ class SynonymReplacement:
     def __call__(self, *args, **kwargs):
         return self.synonym_replacement(*args, **kwargs)
 
-    def synonym_replacement(self, data: Union[list, str], p: float = 0.1) -> Union[list, str]:
+    def synonym_replacement(self, data: Union[List[str], str], p: float = 0.1, repetition: int = 1) -> Union[List[str], str]:
         if isinstance(data, str):
-            return self._replacement(data, p)
+            if repetition <= 1:
+                return self._replacement(data, p)
+            else:
+                return list(map(self._replacement, repeat(data, repetition), repeat(p, repetition)))
         elif isinstance(data, list):
-            return list(map(self._replacement, data, repeat(p, len(data))))
+            if repetition <= 1:
+                return list(map(self._replacement, data, repeat(p, len(data))))
+            else:
+                return list(map(self._replacement, chain.from_iterable(repeat(x, repetition) for x in data), repeat(p, len(data) * repetition)))
         else:
             raise Exception(f"Does not support the data type : {type(data)}")
 

@@ -1,6 +1,6 @@
 import random
-from typing import Union
-from itertools import repeat
+from typing import Union, List
+from itertools import repeat, chain
 
 from src.koeda.utils import replace_space, revert_space, SPACE_TOKEN
 from konlpy.tag import *
@@ -8,7 +8,7 @@ from konlpy.tag import *
 
 class RandomDeletion:
 
-    def __init__(self, morpheme_analyzer=None):
+    def __init__(self, morpheme_analyzer: str = None):
         if morpheme_analyzer is None:
             self.morpheme_analyzer = Okt()
         elif morpheme_analyzer in ["Okt", "Kkma", "Komoran", "Mecab", "Hannanum"]:
@@ -21,11 +21,17 @@ class RandomDeletion:
     def __call__(self, *args, **kwargs):
         return self.random_deletion(*args, **kwargs)
 
-    def random_deletion(self, data: Union[list, str], p: float = 0.1) -> Union[list, str]:
+    def random_deletion(self, data: Union[List[str], str], p: float = 0.1, repetition: int = 1) -> Union[List[str], str]:
         if isinstance(data, str):
-            return self._deletion(data, p)
+            if repetition <= 1:
+                return self._deletion(data, p)
+            else:
+                return list(map(self._deletion, repeat(data, repetition), repeat(p, repetition)))
         elif isinstance(data, list):
-            return list(map(self._deletion, data, repeat(p, len(data))))
+            if repetition <= 1:
+                return list(map(self._deletion, data, repeat(p, len(data))))
+            else:
+                return list(map(self._deletion, chain.from_iterable(repeat(x, repetition) for x in data), repeat(p, len(data) * repetition)))
         else:
             raise Exception(f"Does not support the data type : {type(data)}")
 
@@ -35,7 +41,7 @@ class RandomDeletion:
 
         # obviously, if there's only one word, don't delete it
         if len(words) == 1:
-            return revert_space(words)
+            return words
 
         # randomly delete words with probability p
         new_words = []
