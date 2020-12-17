@@ -18,4 +18,4 @@ __url__ = 'http://toriving.github.io'
 
 __summary__ = 'Easy Data Augmentation for Korean'
 __license__ = 'MIT License'
-__copyright__ = 'Copyright 2018 {}'.format(__author__)
+__copyright__ = 'Copyright 2020 {}'.format(__author__)
