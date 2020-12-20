@@ -136,3 +136,4 @@ temp/
 
 # Deploy
 deploy.sh
+.pre-commit-config.yaml
