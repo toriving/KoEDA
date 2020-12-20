@@ -2,12 +2,12 @@ import random
 from typing import Union, List
 from itertools import repeat, chain
 
-from koeda.utils import replace_space, revert_space, get_synonyms, STOPWORD, SPACE_TOKEN
 from konlpy.tag import *
+
+from koeda.utils import replace_space, revert_space, get_synonyms, STOPWORD, SPACE_TOKEN
 
 
 class RandomInsertion:
-
     def __init__(self, morpheme_analyzer: str = None, stopword: bool = False):
         self.stopword = stopword
 
@@ -23,17 +23,29 @@ class RandomInsertion:
     def __call__(self, *args, **kwargs):
         return self.random_insertion(*args, **kwargs)
 
-    def random_insertion(self, data: Union[List[str], str], p: float = 0.1, repetition: int = 1) -> Union[List[str], str]:
+    def random_insertion(
+        self, data: Union[List[str], str], p: float = 0.1, repetition: int = 1
+    ) -> Union[List[str], str]:
         if isinstance(data, str):
             if repetition <= 1:
                 return self._insertion(data, p)
             else:
-                return list(map(self._insertion, repeat(data, repetition), repeat(p, repetition)))
+                return list(
+                    map(
+                        self._insertion, repeat(data, repetition), repeat(p, repetition)
+                    )
+                )
         elif isinstance(data, list):
             if repetition <= 1:
                 return list(map(self._insertion, data, repeat(p, len(data))))
             else:
-                return list(map(self._insertion, chain.from_iterable(repeat(x, repetition) for x in data), repeat(p, len(data) * repetition)))
+                return list(
+                    map(
+                        self._insertion,
+                        chain.from_iterable(repeat(x, repetition) for x in data),
+                        repeat(p, len(data) * repetition),
+                    )
+                )
         else:
             raise Exception(f"Does not support the data type : {type(data)}")
 

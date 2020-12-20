@@ -2,12 +2,12 @@ import random
 from typing import Union, List
 from itertools import repeat, chain
 
-from koeda.utils import replace_space, revert_space, SPACE_TOKEN
 from konlpy.tag import *
+
+from koeda.utils import replace_space, revert_space, SPACE_TOKEN
 
 
 class RandomDeletion:
-
     def __init__(self, morpheme_analyzer: str = None):
         if morpheme_analyzer is None:
             self.morpheme_analyzer = Okt()
@@ -21,17 +21,27 @@ class RandomDeletion:
     def __call__(self, *args, **kwargs):
         return self.random_deletion(*args, **kwargs)
 
-    def random_deletion(self, data: Union[List[str], str], p: float = 0.1, repetition: int = 1) -> Union[List[str], str]:
+    def random_deletion(
+        self, data: Union[List[str], str], p: float = 0.1, repetition: int = 1
+    ) -> Union[List[str], str]:
         if isinstance(data, str):
             if repetition <= 1:
                 return self._deletion(data, p)
             else:
-                return list(map(self._deletion, repeat(data, repetition), repeat(p, repetition)))
+                return list(
+                    map(self._deletion, repeat(data, repetition), repeat(p, repetition))
+                )
         elif isinstance(data, list):
             if repetition <= 1:
                 return list(map(self._deletion, data, repeat(p, len(data))))
             else:
-                return list(map(self._deletion, chain.from_iterable(repeat(x, repetition) for x in data), repeat(p, len(data) * repetition)))
+                return list(
+                    map(
+                        self._deletion,
+                        chain.from_iterable(repeat(x, repetition) for x in data),
+                        repeat(p, len(data) * repetition),
+                    )
+                )
         else:
             raise Exception(f"Does not support the data type : {type(data)}")
 

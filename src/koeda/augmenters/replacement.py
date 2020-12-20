@@ -2,12 +2,12 @@ import random
 from typing import Union, List
 from itertools import repeat, chain
 
-from koeda.utils import replace_space, revert_space, get_synonyms, STOPWORD
 from konlpy.tag import *
+
+from koeda.utils import replace_space, revert_space, get_synonyms, STOPWORD
 
 
 class SynonymReplacement:
-
     def __init__(self, morpheme_analyzer: str = None, stopword: bool = False):
         self.stopword = stopword
 
@@ -23,17 +23,31 @@ class SynonymReplacement:
     def __call__(self, *args, **kwargs):
         return self.synonym_replacement(*args, **kwargs)
 
-    def synonym_replacement(self, data: Union[List[str], str], p: float = 0.1, repetition: int = 1) -> Union[List[str], str]:
+    def synonym_replacement(
+        self, data: Union[List[str], str], p: float = 0.1, repetition: int = 1
+    ) -> Union[List[str], str]:
         if isinstance(data, str):
             if repetition <= 1:
                 return self._replacement(data, p)
             else:
-                return list(map(self._replacement, repeat(data, repetition), repeat(p, repetition)))
+                return list(
+                    map(
+                        self._replacement,
+                        repeat(data, repetition),
+                        repeat(p, repetition),
+                    )
+                )
         elif isinstance(data, list):
             if repetition <= 1:
                 return list(map(self._replacement, data, repeat(p, len(data))))
             else:
-                return list(map(self._replacement, chain.from_iterable(repeat(x, repetition) for x in data), repeat(p, len(data) * repetition)))
+                return list(
+                    map(
+                        self._replacement,
+                        chain.from_iterable(repeat(x, repetition) for x in data),
+                        repeat(p, len(data) * repetition),
+                    )
+                )
         else:
             raise Exception(f"Does not support the data type : {type(data)}")
 
@@ -45,7 +59,9 @@ class SynonymReplacement:
 
         new_words = split_words.copy()
         if self.stopword:
-            random_word_list = list(set([word for word in words if word not in STOPWORD]))
+            random_word_list = list(
+                set([word for word in words if word not in STOPWORD])
+            )
         else:
             random_word_list = list(set(words))
 
@@ -55,7 +71,9 @@ class SynonymReplacement:
             synonyms = get_synonyms(random_word)
             if len(synonyms) >= 1:
                 synonym = random.choice(list(synonyms))
-                new_words = [synonym if word == random_word else word for word in split_words]
+                new_words = [
+                    synonym if word == random_word else word for word in split_words
+                ]
                 num_replaced += 1
             if num_replaced >= n:  # only replace up to n words
                 break

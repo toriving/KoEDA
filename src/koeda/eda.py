@@ -1,15 +1,21 @@
 import random
-import re
 from typing import Union, List
 from itertools import repeat, chain
 
-from .augmenters import *
 from konlpy.tag import *
+
+from .augmenters import *
 
 
 class EasyDataAugmentation:
-
-    def __init__(self, morpheme_analyzer: str = None, alpha_sr: float = 0.1, alpha_ri: float = 0.1, alpha_rs: float = 0.1, prob_rd: float = 0.1):
+    def __init__(
+        self,
+        morpheme_analyzer: str = None,
+        alpha_sr: float = 0.1,
+        alpha_ri: float = 0.1,
+        alpha_rs: float = 0.1,
+        prob_rd: float = 0.1,
+    ):
         if morpheme_analyzer is None:
             self.morpheme_analyzer = Okt()
         elif morpheme_analyzer in ["Okt", "Kkma", "Komoran", "Mecab", "Hannanum"]:
@@ -19,30 +25,39 @@ class EasyDataAugmentation:
         else:
             raise Exception("Does not support morpheme analyzer.")
 
-        self.alphas = (alpha_sr,
-                       alpha_ri,
-                       alpha_rs,
-                       prob_rd)
+        self.alphas = (alpha_sr, alpha_ri, alpha_rs, prob_rd)
 
-        self.augmentations = (SynonymReplacement(self.morpheme_analyzer, False),
-                         RandomInsertion(self.morpheme_analyzer, False),
-                         RandomSwap(self.morpheme_analyzer),
-                         RandomDeletion(self.morpheme_analyzer))
+        self.augmentations = (
+            SynonymReplacement(self.morpheme_analyzer, False),
+            RandomInsertion(self.morpheme_analyzer, False),
+            RandomSwap(self.morpheme_analyzer),
+            RandomDeletion(self.morpheme_analyzer),
+        )
 
     def __call__(self, *args, **kwargs):
         return self.eda(*args, **kwargs)
 
-    def eda(self, data: Union[List[str], str], p: List[float] = None, repetition: int = 1) -> Union[List[str], str]:
+    def eda(
+        self, data: Union[List[str], str], p: List[float] = None, repetition: int = 1
+    ) -> Union[List[str], str]:
         if isinstance(data, str):
             if repetition <= 1:
                 return self._eda(data, p)
             else:
-                return list(map(self._eda, repeat(data, repetition), repeat(p, repetition)))
+                return list(
+                    map(self._eda, repeat(data, repetition), repeat(p, repetition))
+                )
         elif isinstance(data, list):
             if repetition <= 1:
                 return list(map(self._eda, data, repeat(p, len(data))))
             else:
-                return list(map(self._eda, chain.from_iterable(repeat(x, repetition) for x in data), repeat(p, len(data) * repetition)))
+                return list(
+                    map(
+                        self._eda,
+                        chain.from_iterable(repeat(x, repetition) for x in data),
+                        repeat(p, len(data) * repetition),
+                    )
+                )
         else:
             raise Exception(f"Does not support the data type : {type(data)}")
 
@@ -51,30 +66,8 @@ class EasyDataAugmentation:
         if p is not None and len(p) == 4:
             augmented_sentences = self.augmentations[random_idx](data, p[random_idx])
         else:
-            augmented_sentences = self.augmentations[random_idx](data, self.alphas[random_idx])
+            augmented_sentences = self.augmentations[random_idx](
+                data, self.alphas[random_idx]
+            )
 
         return augmented_sentences
-
-
-
-
-def get_only_chars(line):
-    clean_line = ""
-
-    line = line.replace("’", "")
-    line = line.replace("'", "")
-    line = line.replace("-", " ")  # replace hyphens with spaces
-    line = line.replace("\t", " ")
-    line = line.replace("\n", " ")
-    line = line.lower()
-
-    for char in line:
-        if char in 'qwertyuiopasdfghjklzxcvbnm ':
-            clean_line += char
-        else:
-            clean_line += ' '
-
-    clean_line = re.sub(' +', ' ', clean_line)  # delete extra spaces
-    if clean_line[0] == ' ':
-        clean_line = clean_line[1:]
-    return clean_line

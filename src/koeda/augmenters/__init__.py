@@ -1,4 +1,4 @@
-__all__ = ['RandomDeletion', 'RandomInsertion', 'SynonymReplacement', 'RandomSwap']
+__all__ = ["RandomDeletion", "RandomInsertion", "SynonymReplacement", "RandomSwap"]
 
 from .deletion import *
 from .insertion import *
