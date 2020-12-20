@@ -1,4 +1,4 @@
-from . import WORDNET
+from koeda.utils import WORDNET
 
 
 def get_synonyms(word):

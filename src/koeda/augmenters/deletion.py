@@ -2,7 +2,7 @@ import random
 from typing import Union, List
 from itertools import repeat, chain
 
-from src.koeda.utils import replace_space, revert_space, SPACE_TOKEN
+from koeda.utils import replace_space, revert_space, SPACE_TOKEN
 from konlpy.tag import *
 
 
