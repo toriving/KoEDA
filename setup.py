@@ -15,7 +15,7 @@ setup(
     keywords=['NLP deep learning koeda korean easy data augmentation'],
     license="MIT",
     python_requires='>=3.6.0',
-    package_data={},
+    include_package_data=True,
     zip_safe=False,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
