@@ -48,7 +48,7 @@ print(result)
 ```
 
 ## Augmenters
-
+- EasyDataAugmentation (EDA)
 - RandomDeletion (RD)
 - RandomInsertion (RI)
 - SynonymReplacement (SR)
