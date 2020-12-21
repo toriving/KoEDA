@@ -17,7 +17,7 @@ setup(
     install_requires=requirements,
     keywords=["NLP deep learning koeda korean easy data augmentation"],
     license="MIT",
-    # python_requires=">=3.6.0",
+    python_requires=">=3.6.0",
     include_package_data=True,
     zip_safe=False,
     classifiers=[
