@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+with open("requirements.txt") as f:
+    requirements = f.read().splitlines()
+
 setup(
     name="koeda",
     version="0.0.3",
@@ -11,7 +14,7 @@ setup(
     url="https://github.com/toriving/KoEDA",
     package_dir={"": "src"},
     packages=find_packages("src"),
-    install_requires=[],
+    install_requires=requirements,
     keywords=["NLP deep learning koeda korean easy data augmentation"],
     license="MIT",
     python_requires=">=3.6.0",
