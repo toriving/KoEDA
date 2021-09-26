@@ -8,7 +8,6 @@ def replace_space(text: str) -> str:
 def revert_space(text: list) -> str:
     clean = (
         " ".join("".join(text).replace(SPACE_TOKEN, " ").split())
-        .replace(" .", ".")
         .strip()
     )
     return clean
