@@ -5,7 +5,7 @@ with open("requirements.txt") as f:
 
 setup(
     name="koeda",
-    version="0.0.3",
+    version="0.0.4",
     description="Korean Easy Data Augmentation Package",
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
