@@ -23,10 +23,10 @@ KoEDA
 This is a project that re-implemented Easy data augmentation and A Easier Data Augmentation, which were implemented for English, to fit Korean.
 
 ## Prerequisites
-- python >= 3.6
+- python >= 3.7
 
 ## Installation
-This repository is tested on Python 3.6 - 3.9.  
+This repository is tested on Python 3.7 - 3.9.  
 
 KoEDA can be installed using pip as follows:
 ```shell script
