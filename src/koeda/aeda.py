@@ -15,7 +15,7 @@ class AEasierDataAugmentation:
         punctuations: List[str] = None
     ):
         if punctuations is None or not isinstance(punctuations, list):
-            self.punctuations = ['.', ',', '!', '?', ';', ':']
+            self.punctuations = ('.', ',', '!', '?', ';', ':')
         else:
             self.punctuations = punctuations
 
