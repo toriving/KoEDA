@@ -4,7 +4,7 @@ from itertools import repeat, chain
 
 from konlpy.tag import *
 
-from koeda.utils import replace_space, revert_space
+from ..utils import replace_space, revert_space
 
 
 class RandomSwap:
@@ -16,7 +16,8 @@ class RandomSwap:
         elif hasattr(morpheme_analyzer, "morphs"):
             self.morpheme_analyzer = morpheme_analyzer
         else:
-            raise Exception("Does not support morpheme analyzer.")
+            raise ValueError(f'Does not support {morpheme_analyzer} morpheme analyzer. '
+                             f'Choose one of ["Okt", "Kkma", "Komoran", "Mecab", "Hannanum"]')
 
     def __call__(self, *args, **kwargs):
         return self.random_swap(*args, **kwargs)
@@ -43,7 +44,7 @@ class RandomSwap:
                     )
                 )
         else:
-            raise Exception(f"Does not support the data type : {type(data)}")
+            raise TypeError(f"Does not support the data type : {type(data)}")
 
     def _swap(self, data: str, p: float = 0.1) -> str:
         split_words = self.morpheme_analyzer.morphs(replace_space(data))

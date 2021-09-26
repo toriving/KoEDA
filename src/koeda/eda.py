@@ -23,7 +23,8 @@ class EasyDataAugmentation:
         elif hasattr(morpheme_analyzer, "morphs"):
             self.morpheme_analyzer = morpheme_analyzer
         else:
-            raise Exception("Does not support morpheme analyzer.")
+            raise ValueError(f'Does not support {morpheme_analyzer} morpheme analyzer. '
+                             f'Choose one of ["Okt", "Kkma", "Komoran", "Mecab", "Hannanum"]')
 
         self.alphas = (alpha_sr, alpha_ri, alpha_rs, prob_rd)
 
@@ -59,15 +60,13 @@ class EasyDataAugmentation:
                     )
                 )
         else:
-            raise Exception(f"Does not support the data type : {type(data)}")
+            raise TypeError(f"Does not support the data type : {type(data)}")
 
     def _eda(self, data: str, p: List[float]) -> str:
         random_idx = random.randint(0, 3)
-        if p is not None and len(p) == 4:
-            augmented_sentences = self.augmentations[random_idx](data, p[random_idx])
-        else:
-            augmented_sentences = self.augmentations[random_idx](
-                data, self.alphas[random_idx]
-            )
+        if p is None or len(p) != 4:
+            p = self.alphas
+
+        augmented_sentences = self.augmentations[random_idx](data, p[random_idx])
 
         return augmented_sentences
