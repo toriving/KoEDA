@@ -20,69 +20,141 @@ KoEDA
 <p>Easy Data Augmentation for Korean
 </h3>
 
+This is a project that re-implemented Easy data augmentation and A Easier Data Augmentation, which were implemented for English, to fit Korean.
+
 ## Prerequisites
-- python >= 3.6
+- python >= 3.7
 
 ## Installation
-This repository is tested on Python 3.6 - 3.9.  
+This repository is tested on Python 3.7 - 3.9.  
+
 KoEDA can be installed using pip as follows:
 ```shell script
 $ pip install koeda
 ```
 
 ## Quick Start
-
+- EDA
 ```python
-from koeda import EasyDataAugmentation
+from koeda import EDA
 
 
-EDA = EasyDataAugmentation(
-    morpheme_analyzer=None, alpha_sr=0.3, alpha_ri=0.3, alpha_rs=0.3, prob_rd=0.3
+eda = EDA(
+    morpheme_analyzer="Okt", alpha_sr=0.3, alpha_ri=0.3, alpha_rs=0.3, prob_rd=0.3
 )
 
 text = "아버지가 방에 들어가신다"
 
-result = EDA(text)
+result = eda(text)
 print(result)
 # 아버지가 정실에 들어가신다
+
+result = eda(text, p=(0.9, 0.9, 0.9, 0.9), repetition=2)
+print(result)
+# ['아버지가 객실 아빠 안방 방에 정실 들어가신다', '아버지가 탈의실 방 휴게실 에 안방 탈의실 들어가신다']
 ```
 
+- AEDA
+```python
+from koeda import AEDA
+
+
+aeda = AEDA(
+    morpheme_analyzer="Okt", punc_ratio=0.3, punctuations=[".", ",", "!", "?", ";", ":"]
+)
+
+text = "어머니가 집을 나가신다"
+
+result = aeda(text)
+print(result)
+# 어머니가 ! 집을 , 나가신다
+
+result = aeda(text, p=0.9, repetition=2)
+print(result)
+# ['! 어머니가 ! 집 ; 을 ? 나가신다', '. 어머니 ? 가 . 집 , 을 , 나가신다']
+```
 ## Augmenters
 - EasyDataAugmentation (EDA)
+- AEasierDataAugmentation (AEDA)
 - RandomDeletion (RD)
 - RandomInsertion (RI)
 - SynonymReplacement (SR)
 - RandomSwap (RS)
 
+There are two ways to load Augmenter.
+  
+The first is to use the full name.
+```python
+from koeda import EasyDataAugmentation
+```
+The second is to use abbreviations.
+```python
+from koeda import EDA
+```
 
 ## Usage
-- EDA class
+- EDA
 ```python
-EDA = EasyDataAugmentation(
-    morpheme_analyzer: str = None,
-    alpha_sr: float = 0.1,
-    alpha_ri: float = 0.1,
-    alpha_rs: float = 0.1,
-    prob_rd: float = 0.1,
-):
+augmenter = EDA(
+              morpheme_analyzer: str = None,  # Default = "Okt"
+              alpha_sr: float = 0.1,
+              alpha_ri: float = 0.1,
+              alpha_rs: float = 0.1,
+              prob_rd: float = 0.1
+            )
 
-text = "아버지가방에들어가신다"
+result = augmenter(
+            data: Union[List[str], str], 
+            p: List[float] = None,  # Default = (0.1, 0.1, 0.1, 0.1)
+            repetition: int = 1
+          )
+```
 
-# EDA(data: Union[List[str], str], p: List[float] = None, repetition: int = 1)
-result = EDA(data=text, p=None, repetition=1)
+- AEDA
+```python
+augmenter = AEDA(
+              morpheme_analyzer: str = None,  # Default = "Okt"
+              punc_ratio: float = 0.3,
+              punctuations: List[str] = None  # default = ('.', ',', '!', '?', ';', ':')
+            )
+
+result = augmenter(
+            data: Union[List[str], str], 
+            p: float = None,  # Default = 0.3 
+            repetition: int = 1
+          )
 ```
 
 - The others (RD, RI, SR, RS)
 ```python
-augmenter = Augmenter(morpheme_analyzer: str = None, stopword: bool = False)
+augmenter = RD(
+              morpheme_analyzer: str = None, 
+            )
 
-text = "아버지가방에들어가신다"
+augmenter = RI(
+              morpheme_analyzer: str = None, 
+              stopword: bool = False
+            )
 
-# augmenter(data: Union[List[str], str], p: float = 0.1, repetition: int = 1)
-result = augmenter(data=text, p=0.5, repetiion=1)
+augmenter = SR(
+              morpheme_analyzer: str = None, 
+              stopword: bool = False
+            )
+
+augmenter = RS(
+              morpheme_analyzer: str = None, 
+            )
+
+result = augmenter(
+            data: Union[List[str], str], 
+            p: float = 0.1,
+            repetition: int = 1
+          )
 ```
 
 ## Reference
 [Easy Data Augmentation Paper](https://www.aclweb.org/anthology/D19-1670.pdf)  
 [Easy Data Augmentation Repository](https://github.com/jasonwei20/eda_nlp)  
+[A Easier Data Augmentation Paper](https://arxiv.org/pdf/2108.13230.pdf)  
+[A Easier Data Augmentation Repository](https://github.com/akkarimi/aeda_nlp)  
 [Korean WordNet](http://wordnet.kaist.ac.kr/)

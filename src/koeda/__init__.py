@@ -1,5 +1,5 @@
 __title__ = "KoEDA"
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 __author__ = "Dongju Park"
 __email__ = "toriving@gmail.com"
@@ -11,7 +11,13 @@ __copyright__ = "Copyright 2020 {}".format(__author__)
 
 
 from .eda import EasyDataAugmentation
+from .aeda import AEasierDataAugmentation
+from .augmenters import RandomDeletion, RandomInsertion, \
+    SynonymReplacement, RandomSwap
 
-from .augmenters import RandomDeletion, RandomInsertion, SynonymReplacement, RandomSwap
-
-from .utils import STOPWORD, WORDNET, get_synonyms
+from .aeda import AEasierDataAugmentation as AEDA
+from .eda import EasyDataAugmentation as EDA
+from .augmenters import RandomDeletion as RD
+from .augmenters import RandomInsertion as RI
+from .augmenters import SynonymReplacement as SR
+from .augmenters import RandomSwap as RS

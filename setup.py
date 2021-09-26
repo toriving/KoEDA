@@ -5,7 +5,7 @@ with open("requirements.txt") as f:
 
 setup(
     name="koeda",
-    version="0.0.3",
+    version="0.0.4",
     description="Korean Easy Data Augmentation Package",
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
@@ -17,7 +17,7 @@ setup(
     install_requires=requirements,
     keywords=["NLP deep learning koeda korean easy data augmentation"],
     license="MIT",
-    python_requires=">=3.6.0",
+    python_requires=">=3.7.0",
     include_package_data=True,
     zip_safe=False,
     classifiers=[
@@ -28,7 +28,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
