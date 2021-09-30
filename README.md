@@ -153,8 +153,6 @@ result = augmenter(
 ```
 
 ## Reference
-[Easy Data Augmentation Paper](https://www.aclweb.org/anthology/D19-1670.pdf)  
-[Easy Data Augmentation Repository](https://github.com/jasonwei20/eda_nlp)  
-[A Easier Data Augmentation Paper](https://arxiv.org/pdf/2108.13230.pdf)  
-[A Easier Data Augmentation Repository](https://github.com/akkarimi/aeda_nlp)  
-[Korean WordNet](http://wordnet.kaist.ac.kr/)
+EDA: Easy Data Augmentation Techniques for Boosting Performance on Text Classification Tasks ([Paper](https://www.aclweb.org/anthology/D19-1670.pdf) / [Repo](https://github.com/jasonwei20/eda_nlp))  
+AEDA: An Easier Data Augmentation Technique for Text Classification ([Paper](https://arxiv.org/pdf/2108.13230.pdf) / [Repo](https://github.com/akkarimi/aeda_nlp))  
+Korean WordNet ([Link](http://wordnet.kaist.ac.kr/))
